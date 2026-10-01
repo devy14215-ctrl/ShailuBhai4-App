@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Shailu Bhai — Daily Collection Manager</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div>
+      <div class="brand">Shailu Bhai</div>
+      <div class="subtitle">Daily Collection & Expense Manager</div>
+    </div>
+    <button class="icon-btn" id="backupQuickBtn" title="Backup">↥</button>
+  </header>
+
+  <main id="main">
+    <section id="dashboard" class="screen active">
+      <div class="hero-card">
+        <div>
+          <div class="eyebrow">TODAY</div>
+          <div class="hero-date" id="todayLabel"></div>
+        </div>
+        <button class="primary-btn compact" id="quickCollectBtn">+ Collection</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><span>Today's Collection</span><strong id="statCollection">₹0</strong></div>
+        <div class="stat-card"><span>Today's Expenses</span><strong id="statExpense">₹0</strong></div>
+        <div class="stat-card"><span>Pending</span><strong id="statPending">₹0</strong></div>
+        <div class="stat-card"><span>Outstanding</span><strong id="statOutstanding">₹0</strong></div>
+        <div class="stat-card"><span>Penalty</span><strong id="statPenalty">₹0</strong></div>
+        <div class="stat-card accent"><span>Net Remaining</span><strong id="statNet">₹0</strong></div>
+      </div>
+      <div class="section-head"><h2>Today's Loans</h2><button class="text-btn" data-screen="loans">View all</button></div>
+      <div id="todayLoans" class="card-list"></div>
+    </section>
+
+    <section id="customers" class="screen">
+      <div class="page-head"><div><h1>Customers</h1><p>Customer profile and all loans</p></div><button class="primary-btn" id="addCustomerBtn">+ Customer</button></div>
+      <input class="search" id="customerSearch" placeholder="Search name, mobile or Customer ID">
+      <div id="customerList" class="card-list"></div>
+    </section>
+
+    <section id="loans" class="screen">
+      <div class="page-head"><div><h1>Loans</h1><p>Every loan has its own Loan ID</p></div><button class="primary-btn" id="addLoanBtn">+ Loan</button></div>
+      <div class="filter-row">
+        <button class="filter active" data-loan-filter="active">Active</button>
+        <button class="filter" data-loan-filter="all">All</button>
+        <button class="filter" data-loan-filter="archive">Archive</button>
+      </div>
+      <input class="search" id="loanSearch" placeholder="Search Loan ID, customer, mobile">
+      <div id="loanList" class="card-list"></div>
+    </section>
+
+    <section id="collection" class="screen">
+      <div class="page-head"><div><h1>Collection</h1><p>Payment is always linked to one Loan ID</p></div><button class="primary-btn" id="addPaymentBtn">+ Payment</button></div>
+      <div class="summary-strip">
+        <div><span>Expected</span><b id="colExpected">₹0</b></div>
+        <div><span>Collected</span><b id="colCollected">₹0</b></div>
+        <div><span>Pending</span><b id="colPending">₹0</b></div>
+      </div>
+      <input class="search" id="paymentSearch" placeholder="Search customer, Loan ID or date">
+      <div id="paymentList" class="card-list"></div>
+    </section>
+
+    <section id="expenses" class="screen">
+      <div class="page-head"><div><h1>Expenses</h1><p>Diary expenses and direct WhatsApp</p></div><button class="primary-btn" id="addExpenseBtn">+ Expense</button></div>
+      <div class="summary-strip"><div><span>Total</span><b id="expenseTotal">₹0</b></div></div>
+      <div class="filter-row"><input class="date-input" type="date" id="expenseDateFilter"><button class="secondary-btn" id="clearExpenseFilter">All dates</button></div>
+      <div id="expenseList" class="card-list"></div>
+    </section>
+
+    <section id="reports" class="screen">
+      <div class="page-head"><div><h1>Reports</h1><p>Daily, monthly, yearly and loan-wise records</p></div></div>
+      <div class="filter-row">
+        <select id="reportPeriod" class="select"><option value="day">Today</option><option value="month">This month</option><option value="year">This year</option><option value="all">All time</option></select>
+        <input class="date-input" type="date" id="reportDate">
+      </div>
+      <div id="reportSummary" class="report-box"></div>
+      <div class="section-head"><h2>Loan-wise Active Summary</h2></div>
+      <div id="reportLoans" class="card-list"></div>
+      <div class="action-grid">
+        <button class="secondary-btn" id="exportCsvBtn">Export CSV</button>
+        <button class="secondary-btn" id="printReportBtn">Print</button>
+        <button class="secondary-btn" id="shareReportBtn">Share</button>
+      </div>
+    </section>
+
+    <section id="settings" class="screen">
+      <div class="page-head"><div><h1>Settings & Backup</h1><p>Protect your data before changing anything</p></div></div>
+      <div class="settings-card">
+        <h3>Loan Plans</h3>
+        <p class="muted">Configure the 20% cut and collection days for future loans. Existing loans keep their own stored rules.</p>
+        <div id="planEditor"></div>
+        <button class="primary-btn" id="savePlansBtn">Save Plans</button>
+      </div>
+      <div class="settings-card">
+        <h3>Backup & Restore</h3>
+        <p class="muted">JSON backup contains customers, loans, payments, expenses, settings and history.</p>
+        <div class="action-grid">
+          <button class="secondary-btn" id="backupBtn">Download Backup</button>
+          <button class="secondary-btn" id="restoreBtn">Restore Backup</button>
+          <button class="secondary-btn" id="exportAllCsvBtn">Export All CSV</button>
+          <button class="danger-btn" id="resetBtn">Reset App</button>
+        </div>
+        <input type="file" id="restoreFile" accept=".json,application/json" hidden>
+      </div>
+      <div class="settings-card">
+        <h3>Data Safety</h3>
+        <div class="safe-row"><span>Storage</span><b id="storageStatus">IndexedDB</b></div>
+        <div class="safe-row"><span>Customers</span><b id="safeCustomers">0</b></div>
+        <div class="safe-row"><span>Active loans</span><b id="safeLoans">0</b></div>
+        <div class="safe-row"><span>Payments</span><b id="safePayments">0</b></div>
+        <div class="safe-row"><span>Expenses</span><b id="safeExpenses">0</b></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-screen="dashboard"><span>⌂</span><small>Home</small></button>
+    <button class="nav-item" data-screen="customers"><span>♙</span><small>Customers</small></button>
+    <button class="nav-item" data-screen="loans"><span>▣</span><small>Loans</small></button>
+    <button class="nav-item" data-screen="collection"><span>₹</span><small>Collect</small></button>
+    <button class="nav-item" data-screen="expenses"><span>☷</span><small>Expense</small></button>
+    <button class="nav-item" data-screen="reports"><span>▤</span><small>Reports</small></button>
+    <button class="nav-item" data-screen="settings"><span>⚙</span><small>Settings</small></button>
+  </nav>
+</div>
+
+<div id="modalRoot" class="modal-root hidden"></div>
+<div id="toast" class="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
